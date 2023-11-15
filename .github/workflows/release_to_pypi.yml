@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  build_and_publish:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,14 +22,15 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install poetry
+        pip install twine
 
     - name: Get local version
       id: get_local_version
-      run: echo "::set-output name=version::$(poetry version -s)"
+      run: echo "::set-output name=version::$(awk -F ' = ' '$1 == "version" {gsub(/[ "\x27]+/, "", $2); print $2}' pyproject.toml)"
 
     - name: Get latest version from PyPI
       id: get_latest_version
-      run: echo "::set-output name=version::$(curl -s https://pypi.org/pypi/YourPackageName/json | jq -r .info.version)"
+      run: echo "::set-output name=version::$(curl -s https://pypi.org/pypi/u3606b_py/json | jq -r .info.version)"
 
     - name: Check version difference
       id: check_version
@@ -38,6 +39,7 @@ jobs:
         latest_version=${{ steps.get_latest_version.outputs.version }}
         if [ "$local_version" != "$latest_version" ]; then
           echo "Version changed, continue with build"
+          echo "::set-output name=version_changed::true"
         else
           echo "No version change, skip build and publish"
           echo "::set-output name=version_changed::false"
@@ -47,24 +49,9 @@ jobs:
       run: python -m build
       if: steps.check_version.outputs.version_changed == 'true'
 
-  publish:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install twine
-
     - name: Publish to PyPI
       run: twine upload dist/*
       env:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-      if: needs.build.result == 'success' && needs.build.outputs.version_changed == 'true'  # Only publish if the build job succeeded and version changed
+      if: steps.check_version.outputs.version_changed == 'true'

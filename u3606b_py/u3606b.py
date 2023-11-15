@@ -21,6 +21,7 @@ class U3606B(object):
         self.op_stat = "NONE"
         
     def _open(self):
+        '''open device by GPIB address'''
         for dev_n in self.device_list:
             if dev_n.find("GPIB") != -1:
                 self.device_url = dev_n
@@ -30,6 +31,7 @@ class U3606B(object):
                 self.device.write("*rst; status:preset; *cls")
                 return
         print("U3606B Device Not Found")
+
     def _is_busy(self, timeout=100):
         '''checks if equip ready for use'''
         for i in range(0, timeout):

@@ -1,3 +1,5 @@
+[![Build and Publish](https://github.com/leeebo/u3606b_py/actions/workflows/release_to_pypi.yml/badge.svg)](https://github.com/leeebo/u3606b_py/actions/workflows/release_to_pypi.yml) [![version](https://img.shields.io/pypi/v/u3606b_py)](https://pypi.python.org/pypi/u3606b_py) [![license](https://img.shields.io/pypi/l/u3606b_py)](https://pypi.python.org/pypi/u3606b_py) 
+
 ## u3606b Python driver (unofficial)
 
 This is a Python driver for the u3606b multimeter. It is based on the official [U3606B Multimeter| DC Power Supply Programming Guide](https://www.keysight.com/us/en/assets/9018-03963/programming-guides/9018-03963.pdf) and PyVISA package. [PyVISA](https://pyvisa.readthedocs.io/projects/pyvisa-py/en/latest/) is a Python package that allows you to control measurement devices independently of the interface (GPIB, USB, Ethernet, etc.) by using a common API.
