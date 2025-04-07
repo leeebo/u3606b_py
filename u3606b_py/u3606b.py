@@ -368,7 +368,7 @@ class U3606B(object):
                     print('U3606B OUTPUT %s level sets to %r' % (func, lvl))
                     if iv_lim is not None:
                         self.sour_ivlim(func=func, iv_lim=iv_lim)
-                    if out is not Non
+                    if out is not None:
                         return self.sour_out(out)
                     return True
                 except Exception as e:
